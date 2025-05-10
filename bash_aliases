@@ -92,7 +92,7 @@ function changehost_function() {
         hostnamectl set-hostname "$NEW_HOSTNAME"
 
         # Update /etc/hosts entry for 127.0.1.1
-        sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts
+        sudo sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts
 
         # Confirm the change
         echo "Hostname changed to: $NEW_HOSTNAME"
