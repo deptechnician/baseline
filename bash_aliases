@@ -1,7 +1,7 @@
 # -------------------------------------
 # Aliases
 # -------------------------------------
-alias aliasup="cp $HOME/Code/dep/provision/linux/bash_aliases ~/.bash_aliases && source $HOME/.bashrc"
+alias aliasup="cp $HOME/Code/baseline/bash_aliases ~/.bash_aliases && source $HOME/.bashrc"
 alias bkusb='bkusb_function'
 alias bkprofile="$HOME/Code/dep/backup/linux/bkprofile.sh"
 alias bk='bkprofile'
