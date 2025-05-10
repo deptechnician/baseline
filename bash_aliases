@@ -85,20 +85,19 @@ function changehost_function() {
     # Ensure a new hostname is provided
     if [ -z "$1" ]; then
         echo "Usage: sudo $0 <new-hostname>"
-        exit 1
+    else
+        NEW_HOSTNAME="$1"
+
+        # Set the new hostname using hostnamectl
+        hostnamectl set-hostname "$NEW_HOSTNAME"
+
+        # Update /etc/hosts entry for 127.0.1.1
+        sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts
+
+        # Confirm the change
+        echo "Hostname changed to: $NEW_HOSTNAME"
+        echo "You should reboot to fully apply changes."
     fi
-
-    NEW_HOSTNAME="$1"
-
-    # Set the new hostname using hostnamectl
-    hostnamectl set-hostname "$NEW_HOSTNAME"
-
-    # Update /etc/hosts entry for 127.0.1.1
-    sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts
-
-    # Confirm the change
-    echo "Hostname changed to: $NEW_HOSTNAME"
-    echo "You should reboot to fully apply changes."
 }
 
 # Syncup command - uploads the current folder to a destination folder such that the destination mirrors the current folder
