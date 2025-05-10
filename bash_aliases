@@ -6,6 +6,7 @@ alias bkusb='bkusb_function'
 alias bkprofile="$HOME/Code/dep/backup/linux/bkprofile.sh"
 alias bk='bkprofile'
 alias cpp='cpp_function'
+alias changehost='changehost function'
 alias depenv='source ~/.venv/dep/bin/activate'
 alias dirsize='du -h .'
 alias diskspace="du -Sh | sort -n -r"
@@ -77,6 +78,27 @@ function sshnas_function() {
     else
         echo "Cannot find configuration file $NAS_FILE"
     fi
+}
+
+# Pull down content from the nas to the current directory
+function changehost_function() {
+    # Ensure a new hostname is provided
+    if [ -z "$1" ]; then
+        echo "Usage: sudo $0 <new-hostname>"
+        exit 1
+    fi
+
+    NEW_HOSTNAME="$1"
+
+    # Set the new hostname using hostnamectl
+    hostnamectl set-hostname "$NEW_HOSTNAME"
+
+    # Update /etc/hosts entry for 127.0.1.1
+    sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts
+
+    # Confirm the change
+    echo "Hostname changed to: $NEW_HOSTNAME"
+    echo "You should reboot to fully apply changes."
 }
 
 # Syncup command - uploads the current folder to a destination folder such that the destination mirrors the current folder
