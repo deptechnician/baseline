@@ -84,7 +84,7 @@ function sshnas_function() {
 function changehost_function() {
     # Ensure a new hostname is provided
     if [ -z "$1" ]; then
-        echo "Usage: sudo $1 <new-hostname>"
+        echo "Usage: "$0" <new-hostname>"
     else
         NEW_HOSTNAME="$1"
 
