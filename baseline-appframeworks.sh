@@ -17,9 +17,9 @@ then
     echo "Flatpak is already installed"
 else
     sudo apt install flatpak -y
-    sudo apt install gnome-software-plugin-flatpak -y
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 fi
+sudo apt install gnome-software-plugin-flatpak -y
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo "Completed app frameworks installation"
 echo " "
