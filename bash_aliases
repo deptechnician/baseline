@@ -5,6 +5,7 @@ alias aliasup="cp $HOME/Code/baseline/bash_aliases $HOME/.bash_aliases && cp $HO
 alias bkusb='bkusb_function'
 alias bkprofile="$HOME/Code/dep/backup/linux/bkprofile.sh"
 alias bk='bkprofile'
+alias codium='flatpak run com.vscodium.codium'
 alias cpp='cpp_function'
 alias changehost='changehost_function'
 alias depenv='source ~/.venv/dep/bin/activate'
