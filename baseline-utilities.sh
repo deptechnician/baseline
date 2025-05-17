@@ -5,6 +5,7 @@ echo "------------------------------------------------------------------------"
 if [[ -f ~/.utilities ]]; then
     echo "utilities are already configured"
 else
+    bash helper-apt.sh git git git
     bash helper-apt.sh avahi-utils avahi-utils avahi-utils
     bash helper-apt.sh nmap
     bash helper-apt.sh make make make
