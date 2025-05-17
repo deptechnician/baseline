@@ -24,7 +24,7 @@ alias pubip='curl ipinfo.io'
 alias ref='display_reference_file'
 alias sshnas="sshnas_function"
 alias sshagent='eval "$(ssh-agent -s)" '
-alias sshinit="pushd . && cd ~/.ssh && sshagent && ssh-add officenas && ssh-add depgithub && popd"
+alias sshinit="sshinit_function"
 alias sshkey='xclip -sel clip < $HOME/.ssh/depgithub.pub && xclip -o -sel clip'
 alias sshlockdown='sudo cp $HOME/Code/dep/provision/linux/templates/sshd_config_soft /etc/ssh/sshd_config && sudo systemctl restart ssh'
 alias syncup='syncup_function'
@@ -40,6 +40,17 @@ alias update='sudo apt update && sudo apt upgrade -y'
 if [ -f "$HOME/.bash_sshinit" ]; then
     . "$HOME/.bash_sshinit"
 fi
+
+function sshinit_function() {
+    if [ -z "$1" ]; then
+        echo " "
+        echo "Usage: sshinit <profile>"
+        echo "  Example: sshinit melody"
+        echo " "
+    else
+        eval "$(keychain --quiet --agents ssh --eval "$1")"
+    fi
+}
 
 # Backup to a usb
 function bkusb_function() {
