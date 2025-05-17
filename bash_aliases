@@ -1,7 +1,7 @@
 # -------------------------------------
 # Aliases
 # -------------------------------------
-alias aliasup="cp $HOME/Code/baseline/bash_aliases $HOME/.bash_aliases && source $HOME/.bashrc"
+alias aliasup="cp $HOME/Code/baseline/bash_aliases $HOME/.bash_aliases && cp $HOME/Code/baseline/bash_sshinit $HOME/.bash_sshinit && source $HOME/.bashrc"
 alias bkusb='bkusb_function'
 alias bkprofile="$HOME/Code/dep/backup/linux/bkprofile.sh"
 alias bk='bkprofile'
@@ -37,9 +37,9 @@ alias update='sudo apt update && sudo apt upgrade -y'
 # -------------------------------------
 # Initialize ssh if needed
 # -------------------------------------
-#if [ -f "$HOME/.bash_sshinit" ]; then
-#    . "$HOME/.bash_sshinit"
-#fi
+if [ -f "$HOME/.bash_sshinit" ]; then
+    . "$HOME/.bash_sshinit"
+fi
 
 # Backup to a usb
 function bkusb_function() {
