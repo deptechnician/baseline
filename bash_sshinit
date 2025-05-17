@@ -1,12 +1,19 @@
+#!/bin/bash
+
 # Start ssh-agent if not already running
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     eval "$(ssh-agent -s)"
 fi
 
 # Automatically add dep* keys from ~/.ssh/
-for KEY in "$HOME/.ssh"/dep*"; do
-    [[ "$KEY" == *.pub || ! -f "$KEY" ]] && continue
+for KEY in "$HOME/.ssh"/dep*; do
+    # Skip if file doesn't exist or is a public key
+    [[ ! -f "$KEY" || "$KEY" == *.pub ]] && continue
+
+    # Get fingerprint of the key
     FINGERPRINT=$(ssh-keygen -lf "$KEY" | awk '{print $2}')
+
+    # Check if the key is already loaded
     if ! ssh-add -l 2>/dev/null | grep -q "$FINGERPRINT"; then
         ssh-add "$KEY" >/dev/null 2>&1 && echo "Added SSH key: $KEY"
     fi
