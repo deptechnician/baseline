@@ -2,7 +2,7 @@
 # Initialize ssh if needed
 # -------------------------------------
 if [ -f "$HOME/.bash_sshinit" ]; then
-    source "$HOME/.bash_sshinit"
+    . "$HOME/.bash_sshinit"
 fi
 
 # -------------------------------------
