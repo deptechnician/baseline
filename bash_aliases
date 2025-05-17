@@ -37,9 +37,9 @@ alias update='sudo apt update && sudo apt upgrade -y'
 # -------------------------------------
 # Initialize ssh if needed
 # -------------------------------------
-if [ -f "$HOME/.bash_sshinit" ]; then
-    . "$HOME/.bash_sshinit"
-fi
+#if [ -f "$HOME/.bash_sshinit" ]; then
+#    . "$HOME/.bash_sshinit"
+#fi
 
 # Backup to a usb
 function bkusb_function() {
