@@ -11,5 +11,4 @@ bash baseline-app-frameworks.sh
 bash baseline-sshd.sh
 bash app-veracrypt.sh
 base app-brave.sh
-bash 
 popd
