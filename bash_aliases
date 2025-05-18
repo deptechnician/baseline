@@ -12,13 +12,14 @@ alias depenv='source ~/.venv/dep/bin/activate'
 alias dirsize='du -h .'
 alias diskspace="du -Sh | sort -n -r"
 alias extract='extract_function'
+alias fnano='nano "$(find . -type f | fzf-tmux -p --reverse)"'
 alias folders='du -h --max-depth=1'
 alias ftext='ftext_function'
 alias getnas='getnas_function'
 alias gpt="ollama run llama3"
 alias mounte="sudo mount -t drvfs E: /mnt/e"
 alias netscan="nmap -sn"
-alias pcat=provision_cat_function
+alias pcat='provision_cat_function'
 alias provision='provision_function'
 alias privip='ip a | grep inet | grep -v inet6 | grep -v 127.0.0.1'
 alias pubip='curl ipinfo.io'
