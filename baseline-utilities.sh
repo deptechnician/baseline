@@ -1,26 +1,39 @@
+#!/bin/bash
+
 echo "------------------------------------------------------------------------"
 echo " Utilities"
 echo "------------------------------------------------------------------------"
 
-if [[ -f ~/.utilities ]]; then
-    echo "utilities are already configured"
-else
-    bash helper-apt.sh git git git
-    bash helper-apt.sh avahi-utils avahi-utils avahi-utils
-    bash helper-apt.sh nmap
-    bash helper-apt.sh make make make
-    bash helper-apt.sh lm-sensors lm-sensors lm-sensors
-    bash helper-apt.sh xclip xclip xclip
-    bash helper-apt.sh nano nano nano
-    bash helper-apt.sh curl curl "curl"
-    bash helper-apt.sh wget wget "wget"
-    bash helper-apt.sh tree tree "tree"
-    bash helper-apt.sh tmux tmux tmux
-    bash helper-apt.sh keychain keychain keychain
-    #bash helper-apt.sh zoxide zoxide "zoxide"
-    #bash helper-apt.sh trash-cli trash-cli "trash-cli"
-fi
+# Update OS to start clean
+echo "Updating OS..."
+sudo apt update && sudo apt upgrade -y
 
-echo "Completed utilities"
+# Define an array of packages
+utilities=(
+  avahi-utils
+  btop
+  curl
+  find
+  fzf
+  git
+  keychain
+  lm-sensors
+  make
+  nmap
+  nano
+  tmux
+  tree
+  vim
+  wget
+  xclip
+  zoxide
+)
+
+# Loop through and install each package
+for utility in "${utilities[@]}"; do
+  bash helper-apt.sh "$utility" "$utility" "$utility"
+done
+
+echo "All utilities have been installed."
 echo " "
 
