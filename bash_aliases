@@ -24,6 +24,7 @@ alias provision='provision_function'
 alias privip='ip a | grep inet | grep -v inet6 | grep -v 127.0.0.1'
 alias pubip='curl ipinfo.io'
 alias ref='display_reference_file'
+alias sendup="sendup_function"
 alias sshnas="sshnas_function"
 alias sshagent='eval "$(ssh-agent -s)" '
 alias sshinit="sshinit_function"
@@ -120,6 +121,21 @@ function changehost_function() {
     fi
 }
 
+# Sendup command - uploads the current folder to a destination without mirroring it.
+function sendup_function() {
+    if [ -z "$1" ]; then
+        echo " "
+        echo "Usage: sendup [destination]"
+        echo " "
+        echo "Uploads the content from the current folder and mirrors it into a dest folder"
+        echo " "
+        echo "Example: sendup family@nas-homelab:$HOME/nas"
+        echo " "
+    else
+        rsync -avz -progress --no-group ./ "$1"
+    fi
+}
+
 # Syncup command - uploads the current folder to a destination folder such that the destination mirrors the current folder
 function syncup_function() {
     if [ -z "$1" ]; then
@@ -131,7 +147,7 @@ function syncup_function() {
         echo "Example: syncup paul@nas-homelab:$HOME/nas"
         echo " "
     else
-        rsync -avzP --delete --no-group ./ "$1"
+        rsync -avz -progress --delete --no-group ./ "$1"
     fi
 }
 
@@ -146,7 +162,7 @@ function syncdown_function() {
         echo "Example: syncdown paul@nas-homelab:$HOME/nas"
         echo " "
     else
-        rsync -avzP --delete --no-group "$1" ./
+        rsync -avz -progress --delete --no-group "$1" ./
     fi
 }
 
