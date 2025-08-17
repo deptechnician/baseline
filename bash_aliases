@@ -37,6 +37,7 @@ alias treed='tree -CAFd'
 alias transcribe="whisper --model small"
 alias update='sudo apt update && sudo apt upgrade -y'
 alias wakelab='wakeonlan bc:fc:e7:d5:45:08'
+alias wakeoff='wakeonlan 18:60:24:27:1f:b4'
 
 # -------------------------------------
 # Initialize ssh if needed

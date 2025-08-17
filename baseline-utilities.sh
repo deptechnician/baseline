@@ -26,6 +26,7 @@ utilities=(
   vim
   wget
   xclip
+  wakeonlan
   zoxide
 )
 
