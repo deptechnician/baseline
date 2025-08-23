@@ -15,10 +15,11 @@ alias extract='extract_function'
 alias fnano='nano "$(find . -type f | fzf-tmux -p --reverse)"'
 alias folders='du -h --max-depth=1'
 alias ftext='ftext_function'
-alias getnas='getnas_function'
 alias gpt="ollama run llama3"
 alias mounte="sudo mount -t drvfs E: /mnt/e"
 alias netscan="nmap -sn"
+alias nasup='nasup_function'
+alias nasget='nasget_function'
 alias pcat='provision_cat_function'
 alias provision='provision_function'
 alias privip='ip a | grep inet | grep -v inet6 | grep -v 127.0.0.1'
@@ -74,7 +75,7 @@ function bkusb_function() {
 }
 
 # Pull down content from the nas to the current directory
-function getnas_function() {
+function nasget_function() {
     NAS_FILE=$HOME/.dep/nas.conf
     if [ -f "$NAS_FILE" ]; then
         source "$NAS_FILE"
@@ -88,6 +89,31 @@ function getnas_function() {
         echo "Cannot find configuration file $NAS_FILE"
     fi
 }
+
+# Bring the dep nas online
+function nasup_function() {
+    KEYFILE="/root/zfs_dep_key"
+
+    # Loop through all datasets
+    printf "\n"
+    printf "%-30s %-15s\n" "Dataset" "Status"
+    printf "%-30s %-15s\n" "----------------------------" "--------------------"
+    sudo zfs list -H -o name | while read -r dataset; do
+        #echo "Attempting to load key for: $dataset"
+        if sudo zfs load-key -L "file://$KEYFILE" "$dataset" 2>/dev/null; then
+            printf "%-30s %-15s\n" "$dataset" "Unlocked"
+        else
+            printf "%-30s %-15s\n" "$dataset" "Skipped, already unlocked"
+        fi
+    done
+
+    # Mount all datasets
+    printf "\n"
+    echo "Mounting all datasets..."
+    sudo zfs mount -a
+    printf "Datasets mounted\n\n"
+}
+
 
 # Pull down content from the nas to the current directory
 function sshnas_function() {
