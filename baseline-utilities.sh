@@ -11,7 +11,7 @@ sudo apt update && sudo apt upgrade -y
 # Define an array of packages
 utilities=(
   avahi-utils
-  htop
+  btop
   curl
   find
   fzf
