@@ -9,8 +9,7 @@ if systemctl is-active --quiet sshd; then
 else
     # Install the ssh server
     #
-    sudo apt update && sudo apt upgrade -y
-    sudo apt install openssh-server -y
+    bash install-helper.sh openssh-server 
 
     # Setup authorized keys
     # ---------------------

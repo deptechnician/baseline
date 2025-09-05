@@ -1,5 +1,5 @@
 # -------------------------------------
-# Aliases
+# Aliases (ubuntu)
 # -------------------------------------
 alias aliasup="cp $HOME/Code/baseline/bash_aliases $HOME/.bash_aliases && cp $HOME/Code/baseline/bash_sshinit $HOME/.bash_sshinit && source $HOME/.bashrc"
 alias bkusb='bkusb_function'
@@ -39,6 +39,14 @@ alias transcribe="whisper --model small"
 alias update='sudo apt update && sudo apt upgrade -y'
 alias wakelab='wakeonlan bc:fc:e7:d5:45:08'
 alias wakeoff='wakeonlan 18:60:24:27:1f:b4'
+
+# -------------------------------------
+# Aliases (arch)
+# -------------------------------------
+if command -v pacman >/dev/null 2>&1; then
+    # Arch Linux
+    alias update='sudo pacman -Syu --noconfirm'
+fi
 
 # -------------------------------------
 # Initialize ssh if needed

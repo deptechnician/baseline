@@ -14,14 +14,14 @@ else
 
     # --- Install the pre-requisites
     # --- See compiling guide here: https://www.veracrypt.fr/en/CompilingGuidelineLinux.html
-    bash helper-apt.sh git git git
-    bash helper-apt.sh gmake make "make utility"
-    bash helper-apt.sh g++ g++ "g++ compiler"
-    bash helper-apt.sh yasm yasm "yasm"
-    bash helper-apt.sh pkg-config pkg-config "pkg-config"
-    bash helper-apt.sh libwxgtk3.2-dev libwxgtk3.2-dev "libwxgtk3.2-dev"
-    bash helper-apt.sh libfuse-dev libfuse-dev "libfuse-dev"
-    bash helper-apt.sh libpcsclite-dev libpcsclite-dev "libpcsclite-dev"
+    bash install-helper.sh git git git
+    bash install-helper.sh gmake make "make utility"
+    bash install-helper.sh g++ g++ "g++ compiler"
+    bash install-helper.sh yasm yasm "yasm"
+    bash install-helper.sh pkg-config pkg-config "pkg-config"
+    bash install-helper.sh libwxgtk3.2-dev libwxgtk3.2-dev "libwxgtk3.2-dev"
+    bash install-helper.sh libfuse-dev libfuse-dev "libfuse-dev"
+    bash install-helper.sh libpcsclite-dev libpcsclite-dev "libpcsclite-dev"
 
     # --- Pull the source code
     echo "Cloning Veracrypt repository"
