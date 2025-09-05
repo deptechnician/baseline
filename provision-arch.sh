@@ -1,12 +1,10 @@
 #!/bin/bash
 
+# MAKE SURE TO RUN provision-arch-user.sh FIRST
+#
+
 # Stop on any error
 set -e
-
-echo "=============================="
-echo " Creating a new user          "
-echo "=============================="
-bash provision-arch-user.sh
 
 echo "=============================="
 echo "🔄 Updating system..."
