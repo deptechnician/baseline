@@ -36,17 +36,10 @@ alias syncdown='syncdown_function'
 alias tree='tree -CAhF --dirsfirst'
 alias treed='tree -CAFd'
 alias transcribe="whisper --model small"
-alias update='sudo apt update && sudo apt upgrade -y'
+alias update='update_function'
 alias wakelab='wakeonlan bc:fc:e7:d5:45:08'
 alias wakeoff='wakeonlan 18:60:24:27:1f:b4'
 
-# -------------------------------------
-# Aliases (arch)
-# -------------------------------------
-if command -v pacman >/dev/null 2>&1; then
-    # Arch Linux
-    alias update='sudo pacman -Syu --noconfirm'
-fi
 
 # -------------------------------------
 # Initialize ssh if needed
@@ -54,6 +47,31 @@ fi
 if [ -f "$HOME/.bash_sshinit" ]; then
     . "$HOME/.bash_sshinit"
 fi
+
+# -------------------------------------
+# Aliases (arch)
+# -------------------------------------
+function update_function() {
+    if command -v apt >/dev/null 2>&1; then
+        echo "==> Updating & upgrading (Ubuntu/Debian)..."
+        sudo apt update -y
+        sudo apt upgrade -y
+ 
+    elif command -v pacman >/dev/null 2>&1; then
+        echo "==> Updating & upgrading (Arch)..."
+        sudo pacman -Syu --noconfirm
+
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "==> Updating & upgrading (Fedora/Red Hat)..."
+        sudo dnf upgrade -y
+
+    else
+        echo "No supported package manager found (apt, pacman, dnf)."
+        exit 1
+    fi
+
+    echo "✅ Update complete."
+}
 
 function sshinit_function() {
     if [ -z "$1" ]; then
