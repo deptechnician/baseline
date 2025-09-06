@@ -21,6 +21,7 @@ alias netscan="nmap -sn"
 alias nasup='nasup_function'
 alias nasget='nasget_function'
 alias pcat='provision_cat_function'
+alias pkg='pkg_function'
 alias provision='provision_function'
 alias privip='ip a | grep inet | grep -v inet6 | grep -v 127.0.0.1'
 alias pubip='curl ipinfo.io'
@@ -49,7 +50,7 @@ if [ -f "$HOME/.bash_sshinit" ]; then
 fi
 
 # -------------------------------------
-# Aliases (arch)
+# Aliases os update function
 # -------------------------------------
 function update_function() {
     if command -v apt >/dev/null 2>&1; then
@@ -72,6 +73,42 @@ function update_function() {
 
     echo "✅ Update complete."
 }
+
+# -------------------------------------
+# Package installation
+# -------------------------------------
+function pkg_function() {
+    local pkg="$1"
+
+    if [[ -z "$pkg" ]]; then
+        echo "Usage: install_pkg <package_name>"
+        return 1
+    fi
+
+    if command -v apt >/dev/null 2>&1; then
+        echo "==> Installing $pkg (Ubuntu/Debian)..."
+        sudo apt update -y
+        sudo apt install -y "$pkg"
+
+    elif command -v pacman >/dev/null 2>&1; then
+        echo "==> Installing $pkg (Arch)..."
+        sudo pacman -Sy --noconfirm "$pkg"
+
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "==> Installing $pkg (Fedora/Red Hat)..."
+        sudo dnf install -y "$pkg"
+
+    elif command -v yum >/dev/null 2>&1; then
+        echo "==> Installing $pkg (RHEL/CentOS with yum)..."
+        sudo yum install -y "$pkg"
+
+    else
+        echo "No supported package manager found (apt, pacman, dnf, yum)."
+        return 1
+    fi
+}
+
+
 
 function sshinit_function() {
     if [ -z "$1" ]; then
