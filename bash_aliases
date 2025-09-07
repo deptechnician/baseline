@@ -29,7 +29,7 @@ alias pull="dep_script_pull"
 alias ref='dep_script_ref'
 alias sshnas="dep_script_sshnas"
 alias sshagent='eval "$(ssh-agent -s)" '
-alias sshinit="dep_script_sshinit"
+alias sshload="dep_script_sshload"
 alias sshkey='xclip -sel clip < $HOME/.ssh/depgithub.pub && xclip -o -sel clip'
 alias sshlockdown='sudo cp $HOME/Code/dep/provision/linux/templates/sshd_config_soft /etc/ssh/sshd_config && sudo systemctl restart ssh'
 alias syncup='dep_script_syncup'
@@ -68,7 +68,7 @@ scripts=(
     "pull.sh"
     "push.sh"
     "ref.sh"
-    "sshinit.sh"
+    "sshload.sh"
     "sshnas.sh"
     "syncdown.sh"
     "syncup.sh"
