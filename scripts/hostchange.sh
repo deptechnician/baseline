@@ -7,7 +7,7 @@ function hostchange() {
         NEW_HOSTNAME="$1"
 
         # Set the new hostname using hostnamectl
-        hostnamectl set-hostname "$NEW_HOSTNAME"
+        sudo hostnamectl set-hostname "$NEW_HOSTNAME"
 
         # Update /etc/hosts entry for 127.0.1.1
         sudo sed -i "s/^\(127\.0\.1\.1\s\+\).*$/\1$NEW_HOSTNAME/" /etc/hosts

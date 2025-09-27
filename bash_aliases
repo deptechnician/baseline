@@ -15,6 +15,7 @@ alias fnano='nano "$(find . -type f | fzf-tmux -p --reverse)"'
 alias folders='du -h --max-depth=1'
 alias ftext='dep_script_ftext'
 alias gpt="ollama run llama3"
+alias hostchange='dep_script_hostchange'
 alias installapp='dep_script_installapp'
 alias netscan="nmap -sn"
 alias nasup='dep_script_nasup'
