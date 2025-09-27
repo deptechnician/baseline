@@ -39,8 +39,8 @@ alias tree='tree -CAhF --dirsfirst'
 alias treed='tree -CAFd'
 alias transcribe="whisper --model small"
 alias update='dep_script_update'
-alias wakelab='dep_script_wakelab'
-alias wakeoff='dep_script_wakeoff'
+alias vmsdown='dep_script_vmsdown'
+alias wake='dep_script_wake'
 
 # -------------------------------------
 # Function to run a DEP script
@@ -73,8 +73,8 @@ scripts=(
     "syncdown.sh"
     "syncup.sh"
     "update.sh"
-    "wakelab.sh"
-    "wakeoff.sh"
+    "vmsdown.sh"
+    "wake.sh"
     "test.sh")
 
 # ----------------------------------------
