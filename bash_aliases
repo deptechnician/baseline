@@ -7,6 +7,7 @@ alias bkprofile="$HOME/Code/dep/backup/linux/bkprofile.sh"
 alias bk='bkprofile'
 alias codium='flatpak run com.vscodium.codium'
 alias changehost='dep_script_changehost'
+alias clip='xclip -selection clipboard'
 alias depenv='source ~/.venv/dep/bin/activate'
 alias dirsize='du -h .'
 alias diskspace="du -Sh | sort -n -r"
@@ -39,6 +40,7 @@ alias test='dep_script_test'
 alias tree='tree -CAhF --dirsfirst'
 alias treed='tree -CAFd'
 alias transcribe="whisper --model small"
+alias transcripts='dep_script_transcripts'
 alias update='dep_script_update'
 alias vmsdown='dep_script_vmsdown'
 alias wake='dep_script_wake'
@@ -76,7 +78,8 @@ scripts=(
     "update.sh"
     "vmsdown.sh"
     "wake.sh"
-    "test.sh")
+    "test.sh"
+    "transcripts.sh")
 
 # ----------------------------------------
 # Function to dynamically create the 
