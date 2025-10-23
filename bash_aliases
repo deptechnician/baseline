@@ -18,6 +18,7 @@ alias ftext='dep_script_ftext'
 alias gpt="ollama run llama3"
 alias hostchange='dep_script_hostchange'
 alias installapp='dep_script_installapp'
+alias installdocker='dep_script_installdocker'
 alias netscan="nmap -sn"
 alias nasup='dep_script_nasup'
 alias nasget='dep_script_nasget'
@@ -64,6 +65,7 @@ scripts=(
     "ftext.sh" 
     "hostchange.sh" 
     "installapp.sh"
+    "installdocker.sh"
     "nasget.sh" 
     "nasup.sh" 
     "pcat.sh" 
