@@ -1,0 +1,15 @@
+# Enable wakeonlan on a network interface
+ip a
+sudo ethtool -s eno1 wol g
+
+# Make wakeonlan persistent after boot
+sudo nano /etc/network/if-up.d/wakeonlan
+
+# Add the following to the wakeonlan script
+    #!/bin/bash
+    ethtool -s eno1 wol g
+
+# Make it executable
+sudo chmod +x /etc/network/if-up.d/wakeonlan
+
+

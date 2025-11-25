@@ -1,0 +1,28 @@
+###
+### On the device receiving the backup
+###
+
+
+# Create the pool on the new receiving device
+sudo zpool create nas /dev/sda
+
+# Enable zfs receive commands to be authorized without entering a password in sudo
+sudo visudo
+   # Add this to the end of the sudoers file: paul ALL=(ALL) NOPASSWD: /usr/sbin/zfs receive -F nas
+
+# Add the sender's ssh key to ~/.ssh/authorized_keys
+cat keyfile >> ~/.ssh/authorized_keys
+
+
+###
+### On the device sending the snapshots
+###
+
+
+# Send a specific snapshot
+# sudo zfs send -w -R nas@2025-11-24 | ssh paul@onas.local "sudo zfs receive -F nas"
+
+# Send the most recent snapshot (untested)
+#
+sudo zfs send -w -R $(zfs list nas -t snapshot -o name -s creation | tail -n 1) | ssh paul@onas.local "sudo zfs receive -F nas"
+#sudo zfs send -w -R -I $(zfs list nas -t snapshot -o name -s creation | tail -n 2 | head -n 1) $(zfs list nas -t snapshot -o name -s creation | tail -n 1) | ssh paul@onas.local "sudo zfs receive -F nas"
