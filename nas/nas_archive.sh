@@ -14,7 +14,13 @@ TARGET_HOST="$1"
 TARGET_POOL="nas"
 
 # Take the SSH key file path as the second argument (optional)
-SSH_KEY_PATH="${2:-$HOME/.ssh/id_rsa}"  # Default to ~/.ssh/id_rsa if no key is provided
+SSH_KEY_PATH="${2:-/root/.ssh/zfs_sync}"    # Default to /root/.ssh/zfs_sync if no key is provided
+
+# If we don't have the SSH key needed for archival, fail out
+if [[ ! -f "$SSH_KEY_PATH" ]]; then
+    echo "ERROR: SSH key not found at $SSH_KEY_PATH"
+    exit 1
+fi
 
 # Ensure SSH key is loaded into the SSH agent
 # Check if the SSH agent is running
