@@ -22,6 +22,7 @@ alias installdocker='dep_script_installdocker'
 alias netscan="nmap -sn"
 alias nasup='dep_script_nasup'
 alias nasget='dep_script_nasget'
+alias nas_report='sudo /usr/local/bin/nas_event_report.sh pool_report "$(zfs list)" && sudo /usr/local/bin/nas_event_report.sh pool_report "$(zfs list -t snapshot)"'
 alias nasbkusb='dep_script_nasbkusb'
 alias newbash=". $HOME/.bashrc"
 alias pcat='dep_script_pcat'

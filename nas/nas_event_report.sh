@@ -34,6 +34,9 @@ source "$CREDS_FILE"
 # Define webhook URL from creds file
 WEBHOOK_URL="$NAS_MONITOR_URL"
 
+# Replace newlines with spaces in the DETAILS
+DETAILS=$(echo "$DETAILS" | tr '\n' ' ')
+
 # Build JSON payload safely (escapes quotes)
 PAYLOAD=$(printf '{"event": "%s", "details": "%s", "timestamp": "%s", "device_name": "%s", "status": "success"}' \
   "$(printf '%s' "$EVENT" | sed 's/"/\\"/g')" \
@@ -41,12 +44,17 @@ PAYLOAD=$(printf '{"event": "%s", "details": "%s", "timestamp": "%s", "device_na
   "$TIMESTAMP" \
   "$DEVICE_NAME")
 
+echo "Payload being sent:"
+echo "$PAYLOAD"
+
 # Send POST request with Basic Auth
 RESPONSE=$(curl -X POST "$WEBHOOK_URL" \
      -u "$NAS_MONITOR_USERNAME:$NAS_MONITOR_PASSWORD" \
      -H "Content-Type: application/json" \
      --fail --silent --show-error \
      -d "$PAYLOAD")
+
+echo "Server Response: $RESPONSE"
 
 # Check exit code from curl
 if [ $? -eq 0 ]; then
