@@ -1,0 +1,28 @@
+-x 1 paul paul 2307 Nov 25 10:22 nas_archive.sh*
+-rwxrwxr-x 1 paul paul 4242 Nov 25 10:22 nas_archive_setup.sh*
+-rwxrwxr-x 1 paul paul 1536 Nov 25 10:22 nas_event_report.sh*
+-rwxrwxr-x 1 paul paul 3301 Nov 25 10:22 nas_event_setup.sh*
+-rwxrwxr-x 1 paul paul  931 Nov 25 10:22 nas_power_setup.sh*
+-rwxrwxr-x 1 paul paul  495 Nov 25 10:22 nas_snapshot.sh*
+-rwxrwxr-x 1 paul paul 1585 Nov 25 10:22 nas_snapshot_stats.sh*
+
+# Configuration for the primary nas
+#
+sudo ./nas_power_setup.sh
+sudo ./nas_archive_setup.sh
+sudo ./nas_event_setup.sh
+
+# Configuration for the onsite backup nas
+#  Other steps: add zfs_sync.pub to authorized_keys, sudo visudo and add "paul ALL=(ALL) NOPASSWD: /usr/sbin/zfs receive -F nas"
+#
+sudo ./nas_power_setup.sh
+sudo ./nas_archive_setup.sh
+sudo ./nas_event_setup.sh
+
+
+#Configuration for the offsite backup nas
+#  Other steps: add zfs_sync.pub to authorized_keys, sudo visudo same as above
+#
+sudo ./nas_power_setup.sh
+sudo ./nas_event_setup.sh
+
