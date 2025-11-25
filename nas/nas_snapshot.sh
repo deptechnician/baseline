@@ -18,10 +18,5 @@ else
     echo "Snapshot FAILED."
 fi
 
-# Report creation status to n8n
-sudo /usr/local/bin/nas_event_report.sh \
-    "snapshot" \
-    "Snapshot ${SNAP_NAME} created: ${EVENT_STATUS}"
-
 # Call delta calculation script
 /usr/local/bin/nas_snapshot_stats.sh "$SNAP_NAME"

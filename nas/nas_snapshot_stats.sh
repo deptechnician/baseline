@@ -44,13 +44,6 @@ echo "Total difference is $HUMAN_TOTAL"
 # Build plain text message
 DETAILS_MSG="Host: $HOSTNAME Snapshot: $SNAP_NAME of $HUMAN_TOTAL"
 
-# Send to webhook
-sudo /usr/local/bin/nas_event_report.sh \
-    "snapshot_stats" \
-    "$DETAILS_MSG"
-
-
-
 # Build JSON for webhook
 #CHANGES_JSON=$(IFS=,; echo "${DATASET_CHANGES[*]}")
 #DETAILS_JSON=$(printf "snapshot":"%s"," total":"%s" "$SNAP_NAME" "$HUMAN_TOTAL")

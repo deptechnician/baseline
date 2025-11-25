@@ -23,8 +23,6 @@ echo
 # Define the source files (in the current directory)
 SCRIPT_1="nas_snapshot.sh"
 SCRIPT_2="nas_archive.sh"
-SCRIPT_3="nas_event_report.sh"
-SCRIPT_4="nas_snapshot_stats.sh"
 SSH_KEY="zfs_sync"
 LOG_FILE="nas_backup.log"
 
@@ -47,11 +45,9 @@ fi
 echo "Copying scripts to $TARGET_BIN..."
 
 # Check if the scripts exist before copying
-if [[ -f "$SCRIPT_1" && -f "$SCRIPT_2" && -f "$SCRIPT_3" && -f "$SCRIPT_4" ]]; then
+if [[ -f "$SCRIPT_1" && -f "$SCRIPT_2" ]]; then
     sudo cp "$SCRIPT_1" "$TARGET_BIN/"
     sudo cp "$SCRIPT_2" "$TARGET_BIN/"
-    sudo cp "$SCRIPT_3" "$TARGET_BIN/"
-    sudo cp "$SCRIPT_4" "$TARGET_BIN/"
 else
     echo "Error: One or more of the scripts do not exist in the current directory!"
     echo
@@ -76,12 +72,8 @@ sudo chmod 600 "$TARGET_SSH/$SSH_KEY"
 echo "Setting permissions for scripts in $TARGET_BIN..."
 sudo chown root:root "$TARGET_BIN/$SCRIPT_1"
 sudo chown root:root "$TARGET_BIN/$SCRIPT_2"
-sudo chown root:root "$TARGET_BIN/$SCRIPT_3"
-sudo chown root:root "$TARGET_BIN/$SCRIPT_4"
 sudo chmod 750 "$TARGET_BIN/$SCRIPT_1"
 sudo chmod 750 "$TARGET_BIN/$SCRIPT_2"
-sudo chmod 750 "$TARGET_BIN/$SCRIPT_3"
-sudo chmod 750 "$TARGET_BIN/$SCRIPT_4"
 
 # Set correct permissions for the log file
 echo "Setting permissions for the log file in $TARGET_LOG..."
@@ -97,8 +89,13 @@ read -p "Please enter the target for the backup (in the form user@host): " TARGE
 # Setting up cron job
 echo "Setting up weekly cron job..."
 
-# Define the cron job command for the archive task
-CRON_CMD="sudo rtcwake -m no -s 300 && /usr/local/bin/nas_snapshot.sh && /usr/local/bin/nas_archive.sh $TARGET_HOST $TARGET_SSH/$SSH_KEY >> $TARGET_LOG/nas_backup.log 2>&1"
+# Define the cron job commands
+
+# 1) Wake the machine and create the snapshot
+CRON_SNAPSHOT_CMD="sudo rtcwake -m no -s 300 && /usr/local/bin/nas_snapshot.sh >> $TARGET_LOG/nas_backup.log 2>&1"
+
+# 2) Archive to the remote host
+CRON_ARCHIVE_CMD="/usr/local/bin/nas_archive.sh $TARGET_HOST $TARGET_SSH/$SSH_KEY >> $TARGET_LOG/nas_backup.log 2>&1"
 
 # Function to add a cron job without overwriting existing ones
 add_cron_job() {
@@ -116,11 +113,15 @@ add_cron_job() {
     fi
 }
 
-# Add the archive cron job to run every Sunday at 11:00 AM
-add_cron_job "0 11 * * 0 $CRON_CMD"  # Run every Sunday at 11:00 AM
+# Run snapshot every Sunday at 3:00 AM
+add_cron_job "0 3 * * 0 $CRON_SNAPSHOT_CMD"
 
-# Print success message for cron job setup
-echo "Cron job set up successfully to run weekly backup at 11:00 AM on Sundays."
+# Run archive every Sunday at 3:15 AM (after the snapshot finishes)
+add_cron_job "15 3 * * 0 $CRON_ARCHIVE_CMD"
+
+echo "Cron jobs set up successfully:"
+echo "  - Snapshot at 3:00 AM on Sundays"
+echo "  - Archive at 3:15 AM on Sundays"
 
 # Print current cron jobs to verify the new job
 echo
