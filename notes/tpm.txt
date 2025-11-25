@@ -2,7 +2,7 @@ sudo cryptsetup luksDump /dev/nvme0n1p3
 sudo tpm2_getcap properties-fixed
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/nvme0n1p3
 sudo nano /etc/crypttab
-# add sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/disk/by-uuid/56e82882-1ae6-4816-82ca-0c29a9adb301
+# add luks-nvme0n1p3 /dev/nvme0n1p3 none tpm2-device=auto,tpm2-pcrs=0+7
 sudo update-initramfs -u
 sudo reboot
 

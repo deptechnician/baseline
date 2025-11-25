@@ -18,6 +18,7 @@ utilities=(
   nmap
   nano
   tmux
+  tpm2-tools
   tree
   vim
   wget
