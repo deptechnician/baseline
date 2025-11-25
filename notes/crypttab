@@ -1,0 +1,3 @@
+#dm_crypt-0 UUID=56e82882-1ae6-4816-82ca-0c29a9adb301 none luks
+dm_crypt-0 UUID=56e82882-1ae6-4816-82ca-0c29a9adb301 none luks,tpm2-device=auto,tpm2-pcrs=0+7
+

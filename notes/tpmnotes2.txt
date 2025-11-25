@@ -1,0 +1,87 @@
+Thanks for sharing the output from `tpm2_pcrread`. Let's break it down to see if there's a potential mismatch in the PCR values, which could be the reason why the LUKS volume isn't unlocking automatically during boot.
+
+### What We See:
+
+From the output, we can see the **PCR values for both `sha1` and `sha256`**. The critical part here is the PCR values listed under the **`sha256` hash**, because you are using PCRs 0 and 7 with the TPM2 binding (as shown in your `cryptsetup luksDump`).
+
+Here are the PCR values for `sha256` that matter:
+
+* **PCR 0**: `0x9B88F5786110A5F60C7AC58E5FA50DA0A6964F7F321CD63159E291604BA0C22C`
+* **PCR 7**: `0xA15141483F77A7E107B3D2619A112B414C41CDA557421903EC4653413EDE0369`
+
+Now, compare these with the PCR values that were used when the TPM key was originally enrolled. You mentioned that in the `cryptsetup luksDump` output, the token had `tpm2-hash-pcrs: 0+7`. This means that the system expects **PCRs 0 and 7 to match** what was stored during the enrollment process.
+
+---
+
+### Possible Reasons for Mismatch:
+
+1. **Changes in the Boot Environment:**
+
+   * If your system has been updated (new kernel, GRUB updates, or BIOS changes), it could cause the PCR values to change. This happens because PCRs are used to measure the boot environment, and any change (e.g., new kernel, changes in bootloader) will result in a different PCR value.
+2. **Secure Boot or Other Modifications:**
+
+   * If Secure Boot is enabled, it could cause issues with the TPM measurement, as Secure Boot checks and verifies the bootloader and kernel integrity.
+3. **Timing of TPM Availability:**
+
+   * If the TPM device (`/dev/tpmrm0`) wasn't available or initialized properly at the time of boot, the key might not be released during boot. This could result in a fallback to the passphrase prompt.
+
+---
+
+### What You Can Do:
+
+#### 1. **Check for Kernel/Boot Changes:**
+
+* If you've recently updated your kernel or bootloader (GRUB), these changes could cause the PCR values to differ from when the key was originally enrolled.
+
+* **To fix this**, you may need to **re-enroll the TPM key** after updating the kernel or any other boot-related component. Run:
+
+  ```bash
+  sudo systemd-cryptenroll /dev/nvme0n1p3 --tpm2-device=auto --tpm2-pcrs=7
+  ```
+
+  This will re-bind the LUKS volume to the current PCR values.
+
+#### 2. **Check Secure Boot Settings:**
+
+* If you have **Secure Boot** enabled, try temporarily disabling it in the BIOS/UEFI and rebooting to see if the TPM unlock works. Secure Boot can sometimes interfere with TPM-based encryption if there's a mismatch in the bootloader or kernel signature.
+
+#### 3. **Force TPM Initialization Early in Boot:**
+
+* If the TPM device isn’t being initialized early enough, you can try adding the following kernel parameters to ensure the TPM is available at the right time during boot:
+
+  1. Open `/etc/default/grub`:
+
+     ```bash
+     sudo nano /etc/default/grub
+     ```
+  2. Modify the `GRUB_CMDLINE_LINUX_DEFAULT` line to include:
+
+     ```bash
+     GRUB_CMDLINE_LINUX_DEFAULT="quiet splash tpm_tis.force=1"
+     ```
+  3. Update GRUB and reboot:
+
+     ```bash
+     sudo update-grub
+     sudo reboot
+     ```
+
+#### 4. **Verify PCR Values After Boot:**
+
+* After performing the above actions, you can re-check the PCR values post-boot with `tpm2_pcrread` to ensure they still match. If they match, the TPM should release the key to unlock the volume automatically.
+
+---
+
+### Next Steps:
+
+1. Re-enroll the TPM key after updating the kernel or any boot-related component:
+
+   ```bash
+   sudo systemd-cryptenroll /dev/nvme0n1p3 --tpm2-device=auto --tpm2-pcrs=7
+   ```
+
+2. If Secure Boot is enabled, **disable it temporarily** and see if TPM unlock works without it.
+
+3. Try the kernel parameters (`tpm_tis.force=1`) if you suspect the TPM isn’t being initialized early enough.
+
+Once you've done this, reboot and check if the system automatically unlocks the LUKS volume. Let me know how it goes, and we can continue troubleshooting if needed!
