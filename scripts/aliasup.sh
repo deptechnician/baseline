@@ -11,5 +11,4 @@ function aliasup() {
 }
 
 aliasup "$@"
-. "$HOME"/.bashrc.d/bash_aliases
 echo "Aliases are updated"
