@@ -92,10 +92,10 @@ echo "Setting up weekly cron job..."
 # Define the cron job commands
 
 # 1) Wake the machine and create the snapshot
-CRON_SNAPSHOT_CMD="sudo rtcwake -m no -s 300 && /usr/local/bin/nas_snapshot.sh >> $TARGET_LOG/nas_backup.log 2>&1"
+CRON_SNAPSHOT_CMD="/usr/local/bin/nas_snapshot.sh"
 
 # 2) Archive to the remote host
-CRON_ARCHIVE_CMD="/usr/local/bin/nas_archive.sh $TARGET_HOST $TARGET_SSH/$SSH_KEY >> $TARGET_LOG/nas_backup.log 2>&1"
+CRON_ARCHIVE_CMD="/usr/local/bin/nas_archive.sh $TARGET_HOST $TARGET_SSH/$SSH_KEY"
 
 # Function to add a cron job without overwriting existing ones
 add_cron_job() {

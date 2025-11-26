@@ -1,28 +1,24 @@
--x 1 paul paul 2307 Nov 25 10:22 nas_archive.sh*
--rwxrwxr-x 1 paul paul 4242 Nov 25 10:22 nas_archive_setup.sh*
--rwxrwxr-x 1 paul paul 1536 Nov 25 10:22 nas_event_report.sh*
--rwxrwxr-x 1 paul paul 3301 Nov 25 10:22 nas_event_setup.sh*
--rwxrwxr-x 1 paul paul  931 Nov 25 10:22 nas_power_setup.sh*
--rwxrwxr-x 1 paul paul  495 Nov 25 10:22 nas_snapshot.sh*
--rwxrwxr-x 1 paul paul 1585 Nov 25 10:22 nas_snapshot_stats.sh*
-
 # Configuration for the primary nas
+#  The primary nas will hold the decryption key and will not be connected to tailnet
 #
-sudo ./nas_power_setup.sh
+sudo ./nas_sleep_setup.sh  
 sudo ./nas_archive_setup.sh
-sudo ./nas_event_setup.sh
+sudo ./nas_reporting_setup.sh
 
 # Configuration for the onsite backup nas
+#  The onsite backup nas will not hold the encryption key and will connect to tailnet only to archive snapshots offsite
 #  Other steps: add zfs_sync.pub to authorized_keys, sudo visudo and add "paul ALL=(ALL) NOPASSWD: /usr/sbin/zfs receive -F nas"
 #
-sudo ./nas_power_setup.sh
+sudo ./nas_sleep_setup.sh
 sudo ./nas_archive_setup.sh
-sudo ./nas_event_setup.sh
+sudo ./nas_reporting_setup.sh
+sudo ./tssetup.sh
 
-
-#Configuration for the offsite backup nas
+# Configuration for the offsite backup nas
+#  The offsite backup will likewise not hold the encryption key. It will have tailscale installed but will always be connected to tailnet
+#  so it does not need the tssetup script. Tssetup configured tailscale to come up and down on demand. By default it's always up.
 #  Other steps: add zfs_sync.pub to authorized_keys, sudo visudo same as above
 #
-sudo ./nas_power_setup.sh
-sudo ./nas_event_setup.sh
+sudo ./nas_sleep_setup.sh
+sudo ./nas_reporting_setup.sh
 

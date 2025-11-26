@@ -10,7 +10,8 @@ TARGET_BIN="/usr/local/bin"
 
 # List of scripts to install
 SCRIPTS_TO_COPY=(
-  "nas_event_report.sh"
+  "nas_report_event.sh"
+  "nas_report.sh"
 )
 
 # Check if scripts exist before copying
@@ -75,15 +76,11 @@ echo "Scripts installed to: $TARGET_BIN"
 echo "Permissions locked down."
 echo "--------------------------------------------------"
 echo "You can now run the script manually using:"
-echo "   $TARGET_BIN/nas_event_report.sh"
+echo "   $TARGET_BIN/nas_report_event.sh"
 echo "--------------------------------------------------"
 
 # --- Add Cron Jobs for Weekly Reports ---
-EVENT_SCRIPT_PATH="$TARGET_BIN/nas_event_report.sh"
 LOG_FILE="/var/log/nas_report.log"
-
-# Ensure script is executable
-chmod +x "$EVENT_SCRIPT_PATH"
 
 # Function to add a cron job without duplicates
 add_cron_job() {
@@ -98,9 +95,8 @@ add_cron_job() {
     fi
 }
 
-# Add cron jobs (1PM every Sunday)
-add_cron_job "0 13 * * 0 $EVENT_SCRIPT_PATH pool_report \"\$(zfs list)\" >> $LOG_FILE 2>&1"
-add_cron_job "5 13 * * 0 $EVENT_SCRIPT_PATH snapshot_report \"\$(zfs list -t snapshot)\" >> $LOG_FILE 2>&1"
+# Add cron job for NAS reporting (1 PM every Sunday)
+add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
 
 echo "--------------------------------------------------"
 echo "Cron jobs created to run at 1PM every Sunday:"
