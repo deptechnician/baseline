@@ -3,6 +3,13 @@
 LOG_FILE="/var/log/nas_backup.log"
 
 {
+echo "===== NAS Archive Run $(date) ====="
+
+# Ensure the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "ERROR: This script must be run as root."
+    exit 1
+fi
 
 # --- Optional Tailscale on-demand connection ---
 #
@@ -51,25 +58,12 @@ if [[ ! -f "$SSH_KEY_PATH" ]]; then
     exit 1
 fi
 
-# Ensure SSH agent is running
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    echo "Starting SSH agent..."
-    eval $(ssh-agent -s)
-fi
-
-# Ensure SSH key is loaded
-if ! ssh-add -l | grep -q "$SSH_KEY_PATH"; then
-    echo "Loading SSH key from $SSH_KEY_PATH into agent..."
-    ssh-add "$SSH_KEY_PATH"
-fi
-
 # Get latest local snapshot
-SOURCE_LAST_SNAPSHOT=$(sudo zfs list "$SOURCE_POOL" -t snapshot -o name -s creation | tail -n 1)
+SOURCE_LAST_SNAPSHOT=$(zfs list "$SOURCE_POOL" -t snapshot -o name -s creation | tail -n 1)
 
 # Get latest snapshot on receiver
-RECEIVER_LAST_SNAPSHOT=$(ssh "$TARGET_HOST" "zfs list '$TARGET_POOL' -t snapshot -o name -s creation | tail -n 1")
+RECEIVER_LAST_SNAPSHOT=$(ssh -i "$SSH_KEY_PATH" "$TARGET_HOST" "zfs list '$TARGET_POOL' -t snapshot -o name -s creation | tail -n 1")
 
-echo
 echo -------------------------------------------------------------------------------------
 echo "Archiving $SOURCE_LAST_SNAPSHOT on $HOSTNAME to $RECEIVER_LAST_SNAPSHOT on $TARGET_HOST"
 echo -------------------------------------------------------------------------------------
@@ -78,10 +72,13 @@ echo
 # Perform full or incremental send
 if [[ -z "$RECEIVER_LAST_SNAPSHOT" ]]; then
     echo "No snapshots found on the receiver. Sending full snapshot."
-    sudo zfs send -w -R "$SOURCE_LAST_SNAPSHOT" | ssh "$TARGET_HOST" "sudo zfs receive -F $TARGET_POOL"
+    zfs send -w -R "$SOURCE_LAST_SNAPSHOT" | ssh -i "$SSH_KEY_PATH" "$TARGET_HOST" "sudo zfs receive -F $TARGET_POOL"
 else
     echo "Sending incremental backup from $RECEIVER_LAST_SNAPSHOT to $SOURCE_LAST_SNAPSHOT."
-    sudo zfs send -w -R -I "$RECEIVER_LAST_SNAPSHOT" "$SOURCE_LAST_SNAPSHOT" | ssh "$TARGET_HOST" "sudo zfs receive -F $TARGET_POOL"
+    zfs send -w -R -I "$RECEIVER_LAST_SNAPSHOT" "$SOURCE_LAST_SNAPSHOT" | ssh -i "$SSH_KEY_PATH" "$TARGET_HOST" "sudo zfs receive -F $TARGET_POOL"
 fi
+
+echo "===== NAS Archive Finished $(date) ====="
+echo ""
 
 } >> "$LOG_FILE" 2>&1

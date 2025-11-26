@@ -17,12 +17,19 @@ echo "" >> "$LOG_FILE"
 
 # --- Snapshot status ---
 #
-echo "=== Snapshot Status (last 5 @nas snapshots) ===" >> "$LOG_FILE"
-SNAPSHOT_DETAILS=$(zfs list -t snapshot | grep @nas | tail -5)
-/usr/local/bin/nas_event_report.sh snapshot_report "$SNAPSHOT_DETAILS" >> "$LOG_FILE" 2>&1
-echo "" >> "$LOG_FILE"
+echo "=== Snapshot Status (most recent NAS snapshot) ===" >> "$LOG_FILE"
 
-# Optional: add more sections here in the future
-#
+# Get the most recent snapshot name containing @nas
+LATEST_SNAP=$(zfs list -t snapshot -o name -s creation | tail -1 | awk -F@ '{print $2}')
+
+# Get snapshots for that date
+SNAPSHOT_DETAILS=$(zfs list -t snapshot -o name,used,refer | grep "$LATEST_SNAP")
+
+# Send all snapshot details in a single event to NAS monitor
+/usr/local/bin/nas_report_event.sh snapshot_report "$SNAPSHOT_DETAILS" >> "$LOG_FILE" 2>&1
+
+# Also print to log for local reference
+echo "$SNAPSHOT_DETAILS" >> "$LOG_FILE"
+echo "" >> "$LOG_FILE"
 
 
