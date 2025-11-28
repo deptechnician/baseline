@@ -61,11 +61,11 @@ else
     echo "Enter the password for the NAS monitor webhook:"
     read -rs NAS_MONITOR_PASSWORD  # -s hides input while typing
 
-    # Write credentials
-    cat <<EOF > "$CONFIG_FILE"
-    NAS_MONITOR_USERNAME="$NAS_MONITOR_USERNAME"
-    NAS_MONITOR_PASSWORD="$NAS_MONITOR_PASSWORD"
-    EOF
+# Write credentials
+cat <<EOF > "$CONFIG_FILE"
+NAS_MONITOR_USERNAME="$NAS_MONITOR_USERNAME"
+NAS_MONITOR_PASSWORD="$NAS_MONITOR_PASSWORD"
+EOF
 fi
 
 chmod 600 "$CONFIG_FILE"      # protect file
