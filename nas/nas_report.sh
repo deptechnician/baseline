@@ -24,14 +24,7 @@ LATEST_SNAP=$(zfs list -t snapshot -o name -s creation | tail -1 | awk -F@ '{pri
 SNAPSHOT_DETAILS=$(zfs list -t snapshot -o name,used,refer | grep "$LATEST_SNAP")
 
 # Get the latest 3 snapshots of the 'nas' dataset, ordered by creation date
-LATEST_SNAPSHOTS=$(fs list nas -t snapshot -o name -s creation | tail -3 | tr '\n' ' ')
-
-# If there are 3 snapshots, format them into a single string
-if [[ $(echo "$LATEST_SNAPSHOTS" | wc -l) -eq 3 ]]; then
-    SNAPSHOT_MESSAGE="Recent snapshots: $LATEST_SNAPSHOTS"
-else
-    SNAPSHOT_MESSAGE="Not enough snapshots found."
-fi
+SNAPSHOT_MESSAGE=$(fs list nas -t snapshot -o name -s creation | tail -3 | tr '\n' ' ')
 
 # Send all snapshot details in a single event to NAS monitor
 /usr/local/bin/nas_report_event.sh snapshot_report "$SNAPSHOT_MESSAGE" >> "$LOG_FILE" 2>&1
