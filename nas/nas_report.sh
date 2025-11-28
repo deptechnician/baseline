@@ -25,6 +25,7 @@ SNAPSHOT_DETAILS=$(zfs list -t snapshot -o name,used,refer | grep "$LATEST_SNAP"
 
 # Get the latest 3 snapshots of the 'nas' dataset, ordered by creation date
 SNAPSHOT_MESSAGE=$(zfs list nas -t snapshot -o name -s creation | tail -3 | tr '\n' ' ')
+SNAPSHOT_MESSAGE="Latest snapshots: $SNAPSHOT_MESSAGE"
 
 # Send all snapshot details in a single event to NAS monitor
 /usr/local/bin/nas_report_event.sh snapshot_report "$SNAPSHOT_MESSAGE" >> "$LOG_FILE" 2>&1
