@@ -28,7 +28,7 @@ LATEST_SNAPSHOTS=$(zfs list nas -t snapshot -o name -s creation | tail -3)
 
 # If there are 3 snapshots, format them into a single string
 if [[ $(echo "$LATEST_SNAPSHOTS" | wc -l) -eq 3 ]]; then
-    SNAPSHOT_MESSAGE="Latest 3 snapshots: $(echo "$LATEST_SNAPSHOTS" | tr '\n' ', ' | sed 's/, $//')"
+    SNAPSHOT_MESSAGE="Latest 3 snapshots: $(echo "$LATEST_SNAPSHOTS" | tr '\n' ', ' | sed 's/, /, /g' | sed 's/, $//')"
 else
     SNAPSHOT_MESSAGE="Not enough snapshots found."
 fi
