@@ -11,7 +11,7 @@ TARGET_BIN="/usr/local/bin"
 # List of scripts to install
 SCRIPTS_TO_COPY=(
   "nas_report_event.sh"
-  "nas_report_boot.sh"
+  "nas_report_system_stats.sh"
   "nas_report.sh"
 )
 
@@ -107,7 +107,8 @@ add_cron_job() {
 add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
 
 # Add cron job for wake-up event reporting (runs on boot)
-add_cron_job "@reboot /bin/bash -c \"sleep 60 && /usr/local/bin/nas_report_boot.sh >> $LOG_FILE 2>&1\""
+add_cron_job "0 0 * * * /usr/local/bin/nas_report_system_stats.sh"
+
 
 echo "Current cron jobs:"
 sudo crontab -l

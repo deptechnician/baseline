@@ -21,15 +21,25 @@ echo "=== Snapshot Status (most recent NAS snapshot) ===" >> "$LOG_FILE"
 
 # Get the most recent snapshot name containing @nas
 LATEST_SNAP=$(zfs list -t snapshot -o name -s creation | tail -1 | awk -F@ '{print $2}')
-
-# Get snapshots for that date
 SNAPSHOT_DETAILS=$(zfs list -t snapshot -o name,used,refer | grep "$LATEST_SNAP")
 
+# Get the latest 3 snapshots of the 'nas' dataset, ordered by creation date
+LATEST_SNAPSHOTS=$(zfs list nas -t snapshot -o name -s creation | tail -3)
+
+# If there are 3 snapshots, format them into a single string
+if [[ $(echo "$LATEST_SNAPSHOTS" | wc -l) -eq 3 ]]; then
+    SNAPSHOT_MESSAGE="Latest 3 snapshots: $(echo "$LATEST_SNAPSHOTS" | tr '\n' ', ' | sed 's/, $//')"
+else
+    SNAPSHOT_MESSAGE="Not enough snapshots found."
+fi
+
 # Send all snapshot details in a single event to NAS monitor
-/usr/local/bin/nas_report_event.sh snapshot_report "$SNAPSHOT_DETAILS" >> "$LOG_FILE" 2>&1
+/usr/local/bin/nas_report_event.sh snapshot_report "$SNAPSHOT_MESSAGE" >> "$LOG_FILE" 2>&1
+/usr/local/bin/nas_report_system_stats.sh 
 
 # Also print to log for local reference
 echo "$SNAPSHOT_DETAILS" >> "$LOG_FILE"
+echo "$SNAPSHOT_MESSAGE" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 
 
