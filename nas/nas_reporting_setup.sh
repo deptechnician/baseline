@@ -49,7 +49,7 @@ SHOULD_WRITE_CREDS=true # Assume we should write the file by default
 if [[ -f "$CREDS_FILE" ]]; then
     echo
     echo "Credentials already exist: $CREDS_FILE"
-    read -p "Do you want to overwrite them: " choice
+    read -p "Do you want to overwrite them (y/n): " choice
     if [[ "$choice" != "y" && "$choice" != "Y" ]]; then
         echo "Keeping existing credentials. Skipping write."
         # Set flag to false so we skip the write block
@@ -85,7 +85,7 @@ echo "--------------------------------------------------"
 echo "Creds file created at: $CREDS_FILE"
 echo "Scripts installed to: $TARGET_BIN"
 echo "Permissions locked down."
-echo "--------------------------------------------------"
+echo ""
 echo "You can now run the script manually using:"
 echo "   $TARGET_BIN/nas_report_event.sh"
 echo "--------------------------------------------------"
@@ -99,10 +99,10 @@ add_cron_job() {
     CURRENT_CRON=$(sudo crontab -l 2>/dev/null)
 
     if ! echo "$CURRENT_CRON" | grep -F "$cron_job" > /dev/null; then
-        echo "Adding cron job: $cron_job"
+        #echo "Adding cron job: $cron_job"
         (echo "$CURRENT_CRON"; echo "$cron_job") | sudo crontab -
     else
-        echo "Cron job already exists: $cron_job"
+        #echo "Cron job already exists: $cron_job"
     fi
 }
 
@@ -111,13 +111,6 @@ add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
 
 # Add cron job for wake-up event reporting (runs on boot)
 add_cron_job "@reboot /usr/local/bin/nas_report_wake.sh"
-
-echo "--------------------------------------------------"
-echo "Cron jobs created to run at 1PM every Sunday:"
-echo "  • zfs pool report"
-echo "  • zfs snapshot report"
-echo "Output will be logged to: $LOG_FILE"
-echo "--------------------------------------------------"
 
 echo "Current cron jobs:"
 sudo crontab -l
