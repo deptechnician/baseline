@@ -39,40 +39,50 @@ for script in "${SCRIPTS_TO_COPY[@]}"; do
 done
 
 # Create config directory
-CONFIG_DIR="/root/.nas_monitor"
-mkdir -p "$CONFIG_DIR"
+CREDS_DIR="/root/.nas_monitor"
+mkdir -p "$CREDS_DIR"
 
-CONFIG_FILE="$CONFIG_DIR/creds.env"
+CREDS_FILE="$CREDS_DIR/creds.env"
+SHOULD_WRITE_CREDS=true # Assume we should write the file by default
 
 # If creds already exist, ask before overwriting
-if [[ -f "$CONFIG_FILE" ]]; then
+if [[ -f "$CREDS_FILE" ]]; then
     echo
-    echo "⚠️  WARNING: Config already exists at $CONFIG_FILE"
-    read -p "Do you want to overwrite it? (y/N): " choice
+    echo "Credentials already exist: $CREDS_FILE"
+    read -p "Do you want to overwrite them: " choice
     if [[ "$choice" != "y" && "$choice" != "Y" ]]; then
         echo "Keeping existing credentials. Skipping write."
-        exit 0
+        # Set flag to false so we skip the write block
+        SHOULD_WRITE_CREDS=false
     fi
-else
-    # Prompt for username & password
-    echo "Enter the username for the NAS monitor webhook:"
-    read -r NAS_MONITOR_USERNAME
-
-    echo "Enter the password for the NAS monitor webhook:"
-    read -rs NAS_MONITOR_PASSWORD  # -s hides input while typing
-
-# Write credentials
-cat <<EOF > "$CONFIG_FILE"
-NAS_MONITOR_USERNAME="$NAS_MONITOR_USERNAME"
-NAS_MONITOR_PASSWORD="$NAS_MONITOR_PASSWORD"
-EOF
 fi
 
-chmod 600 "$CONFIG_FILE"      # protect file
-chmod 700 "$CONFIG_DIR"       # protect directory
+# --- File Writing Section ---
+if $SHOULD_WRITE_CREDS ; then
+    # If the file doesn't exist or user wants to overwrite, prompt for username & password
+    echo "Enter the username for the NAS monitor service:"
+    read -r NAS_MONITOR_USERNAME
+
+    echo "Enter the password for the NAS monitor service:"
+    read -rs NAS_MONITOR_PASSWORD # -s hides input while typing
+
+    # Write credentials to the file (whether it's new or being overwritten)
+    {
+        printf "NAS_MONITOR_USERNAME=\"%s\"\n" "$NAS_MONITOR_USERNAME"
+        printf "NAS_MONITOR_PASSWORD=\"%s\"\n" "$NAS_MONITOR_PASSWORD"
+    } > "$CREDS_FILE"
+
+    # Set permissions for the credentials file
+    chmod 600 "$CREDS_FILE"
+    chmod 700 "$CREDS_DIR"
+
+    echo "--------------------------------------------------"
+    echo "Credentials file created (or overwritten) at: $CREDS_FILE"
+    echo "--------------------------------------------------"
+fi
 
 echo "--------------------------------------------------"
-echo "Configuration file created at: $CONFIG_FILE"
+echo "Creds file created at: $CREDS_FILE"
 echo "Scripts installed to: $TARGET_BIN"
 echo "Permissions locked down."
 echo "--------------------------------------------------"
