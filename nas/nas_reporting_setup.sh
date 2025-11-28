@@ -82,7 +82,7 @@ if $SHOULD_WRITE_CREDS ; then
 fi
 
 echo "--------------------------------------------------"
-echo "Creds file created at: $CREDS_FILE"
+echo "Creds file: $CREDS_FILE"
 echo "Scripts installed to: $TARGET_BIN"
 echo "Permissions locked down."
 echo ""
@@ -107,7 +107,7 @@ add_cron_job() {
 add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
 
 # Add cron job for wake-up event reporting (runs on boot)
-add_cron_job "@reboot /usr/local/bin/nas_report_wake.sh"
+add_cron_job "@reboot /usr/local/bin/nas_report_boot.sh"
 
 echo "Current cron jobs:"
 sudo crontab -l
