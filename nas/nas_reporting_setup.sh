@@ -99,10 +99,7 @@ add_cron_job() {
     CURRENT_CRON=$(sudo crontab -l 2>/dev/null)
 
     if ! echo "$CURRENT_CRON" | grep -F "$cron_job" > /dev/null; then
-        #echo "Adding cron job: $cron_job"
         (echo "$CURRENT_CRON"; echo "$cron_job") | sudo crontab -
-    else
-        #echo "Cron job already exists: $cron_job"
     fi
 }
 
