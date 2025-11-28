@@ -11,6 +11,7 @@ TARGET_BIN="/usr/local/bin"
 # List of scripts to install
 SCRIPTS_TO_COPY=(
   "nas_report_event.sh"
+  "nas_report_boot.sh"
   "nas_report.sh"
 )
 
@@ -37,13 +38,6 @@ for script in "${SCRIPTS_TO_COPY[@]}"; do
     chmod 750 "$TARGET_BIN/$script"
 done
 
-# Prompt for username & password
-echo "Enter the username for the NAS monitor webhook:"
-read -r NAS_MONITOR_USERNAME
-
-echo "Enter the password for the NAS monitor webhook:"
-read -rs NAS_MONITOR_PASSWORD  # -s hides input while typing
-
 # Create config directory
 CONFIG_DIR="/root/.nas_monitor"
 mkdir -p "$CONFIG_DIR"
@@ -59,13 +53,20 @@ if [[ -f "$CONFIG_FILE" ]]; then
         echo "Keeping existing credentials. Skipping write."
         exit 0
     fi
-fi
+else
+    # Prompt for username & password
+    echo "Enter the username for the NAS monitor webhook:"
+    read -r NAS_MONITOR_USERNAME
 
-# Write credentials
-cat <<EOF > "$CONFIG_FILE"
-NAS_MONITOR_USERNAME="$NAS_MONITOR_USERNAME"
-NAS_MONITOR_PASSWORD="$NAS_MONITOR_PASSWORD"
-EOF
+    echo "Enter the password for the NAS monitor webhook:"
+    read -rs NAS_MONITOR_PASSWORD  # -s hides input while typing
+
+    # Write credentials
+    cat <<EOF > "$CONFIG_FILE"
+    NAS_MONITOR_USERNAME="$NAS_MONITOR_USERNAME"
+    NAS_MONITOR_PASSWORD="$NAS_MONITOR_PASSWORD"
+    EOF
+fi
 
 chmod 600 "$CONFIG_FILE"      # protect file
 chmod 700 "$CONFIG_DIR"       # protect directory
@@ -97,6 +98,9 @@ add_cron_job() {
 
 # Add cron job for NAS reporting (1 PM every Sunday)
 add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
+
+# Add cron job for wake-up event reporting (runs on boot)
+add_cron_job "@reboot /usr/local/bin/nas_report_wake.sh"
 
 echo "--------------------------------------------------"
 echo "Cron jobs created to run at 1PM every Sunday:"
