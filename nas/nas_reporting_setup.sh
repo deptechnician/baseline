@@ -107,7 +107,7 @@ add_cron_job() {
 add_cron_job "0 13 * * 0 /usr/local/bin/nas_report.sh"
 
 # Add cron job for wake-up event reporting (runs on boot)
-add_cron_job "@reboot /bin/bash -c \"sleep 60 && /usr/local/bin/nas_report_wake.sh >> $LOG_FILE 2>&1\""
+add_cron_job "@reboot /bin/bash -c \"sleep 60 && /usr/local/bin/nas_report_boot.sh >> $LOG_FILE 2>&1\""
 
 echo "Current cron jobs:"
 sudo crontab -l
