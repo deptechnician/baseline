@@ -19,7 +19,7 @@ services:
       - db
 
     env_file:
-      - /root/nextcloudcreds.env
+      - nextcloudcreds.env
 
     volumes:
       # ZFS DATASET MAPPING
