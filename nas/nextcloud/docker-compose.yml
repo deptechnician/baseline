@@ -4,7 +4,7 @@ services:
     restart: always
 
     env_file:
-      - nextcloudcreds.env
+      - nextcloudcreds.env # Only the DB service needs the password values loaded this way
 
     volumes:
       - db_data:/var/lib/mysql
@@ -18,32 +18,24 @@ services:
     links:
       - db
 
-    env_file:
-      - nextcloudcreds.env
-
     volumes:
-      # ZFS DATASET MAPPING
-      - /nas/Family/Phones:/var/www/html/data # NOTE: Corrected from Test to Phones
-      - nc_config:/var/www/html/config
+      - /nas/Family/Phones:/var/www/html/data
+      - nc_config:/var/www/html/config # This volume will be clean
       - nc_apps:/var/www/html/apps
     environment:
-      # Keep these as they are specific to the Nextcloud app
-      - MYSQL_HOST=db
+      # CRITICAL: We tell Nextcloud the DB type and location here, NOT the password.
       - NEXTCLOUD_TRUSTED_DOMAINS=192.168.0.127:8080
       - OVERWRITEPROTOCOL=http
       - PHP_MEMORY_LIMIT=512M
       - PHP_UPLOAD_LIMIT=512M
-
-      # *** We MUST still declare these variables in the 'app' service 
-      # but they do not need values here because env_file is present.
-      # Wait, let's keep it simple: REMOVE these from the environment 
-      # and let the env_file handle everything for a cleaner setup:
-      - MYSQL_PASSWORD
+      - MYSQL_HOST=db
       - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
+      - MYSQL_USER=nextcloud # Setting the DB user/name directly in the environment
+
+      # Remove all env_file and explicit password variables from 'app'
+      # Nextcloud will now run the setup wizard
 
 volumes:
   db_data:
   nc_config:
   nc_apps:
-
