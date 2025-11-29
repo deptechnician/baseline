@@ -3,19 +3,12 @@ services:
     image: mariadb:10.5
     restart: always
 
-    # 🤫 Load credentials securely from the generated file
     env_file:
       - /root/nextcloudcreds.env
 
     volumes:
       - db_data:/var/lib/mysql
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
-    environment:
-      # Variables pulled from the env_file:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_PASSWORD
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
 
   app:
     image: nextcloud:latest
@@ -25,27 +18,29 @@ services:
     links:
       - db
 
-    # 🤫 Load credentials securely from the generated file
     env_file:
       - /root/nextcloudcreds.env
 
     volumes:
-      # 💾 ZFS DATASET MAPPING: Maps the host path to the container's data directory
-      - /nas/Family/Test:/var/www/html/data
+      # ZFS DATASET MAPPING
+      - /nas/Family/Phones:/var/www/html/data # NOTE: Corrected from Test to Phones
       - nc_config:/var/www/html/config
       - nc_apps:/var/www/html/apps
     environment:
-      # Variables pulled from the env_file:
-      - MYSQL_PASSWORD
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-
+      # Keep these as they are specific to the Nextcloud app
       - MYSQL_HOST=db
-      # Your static IP for ohana
       - NEXTCLOUD_TRUSTED_DOMAINS=192.168.0.127:8080
       - OVERWRITEPROTOCOL=http
       - PHP_MEMORY_LIMIT=512M
       - PHP_UPLOAD_LIMIT=512M
+
+      # *** We MUST still declare these variables in the 'app' service 
+      # but they do not need values here because env_file is present.
+      # Wait, let's keep it simple: REMOVE these from the environment 
+      # and let the env_file handle everything for a cleaner setup:
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
 
 volumes:
   db_data:
