@@ -1,18 +1,9 @@
 #!/bin/bash
 
 # ==========================================================
-# 1. ROOT PRIVILEGE CHECK
-# ==========================================================
-if [ "$EUID" -ne 0 ]; then
-    echo "ERROR: This script must be run with sudo or as root."
-    echo "Please run: sudo ./setup_nextcloud.sh"
-    exit 1
-fi
-
-# ==========================================================
 # 2. Variable Definitions
 # ==========================================================
-ENV_FILE="/root/nextcloudcreds.env"
+ENV_FILE="./nextcloudcreds.env"
 
 # ==========================================================
 # 3. Security and Credential Generation
