@@ -1,0 +1,11 @@
+1. Permissions
+   a) Set ownership of the nas dataset to the smb user
+	sudo chown family:family /nas/Family/Phones
+   b) Give the www-data user permissions to the dataset too. 
+         sudo setfacl -R -m u:33:rwx /nas/Family/Test
+         sudo setfacl -R -d -m u:33:rwx /nas/Family/Test
+2. Run the credential provisioing scritp to create random passwords for the local database
+    sudo ./provision_creds.sh
+3. Docker compose
+    sudo docker compose up -d
+

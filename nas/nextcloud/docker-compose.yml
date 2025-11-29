@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.5
+    restart: always
+
+    # 🤫 Load credentials securely from the generated file
+    env_file:
+      - /root/nextcloudcreds.env
+
+    volumes:
+      - db_data:/var/lib/mysql
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      # Variables pulled from the env_file:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    image: nextcloud:latest
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - db
+
+    # 🤫 Load credentials securely from the generated file
+    env_file:
+      - /root/nextcloudcreds.env
+
+    volumes:
+      # 💾 ZFS DATASET MAPPING: Maps the host path to the container's data directory
+      - /nas/Family/Test:/var/www/html/data
+      - nc_config:/var/www/html/config
+      - nc_apps:/var/www/html/apps
+    environment:
+      # Variables pulled from the env_file:
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+      - MYSQL_HOST=db
+      # Your static IP for ohana
+      - NEXTCLOUD_TRUSTED_DOMAINS=192.168.0.127:8080
+      - OVERWRITEPROTOCOL=http
+      - PHP_MEMORY_LIMIT=512M
+      - PHP_UPLOAD_LIMIT=512M
+
+volumes:
+  db_data:
+  nc_config:
+  nc_apps:
+
