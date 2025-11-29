@@ -27,6 +27,8 @@ cat << EOF > "$ENV_FILE"
 # Nextcloud Database Credentials - Generated $(date)
 MYSQL_ROOT_PASSWORD=$DB_ROOT_PASS
 MYSQL_PASSWORD=$DB_NC_PASS
+MYSQL_DATABASE=nextcloud
+MYSQL_USER=nextcloud
 EOF
 
 # Set strict permissions: readable only by root

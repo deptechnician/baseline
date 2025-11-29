@@ -3,8 +3,9 @@ services:
     image: mariadb:10.5
     restart: always
 
+    # 🔑 Uses the local nextcloudcreds.env for passwords (MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD, etc.)
     env_file:
-      - nextcloudcreds.env # Only the DB service needs the password values loaded this way
+      - nextcloudcreds.env
 
     volumes:
       - db_data:/var/lib/mysql
@@ -15,30 +16,25 @@ services:
     restart: always
     ports:
       - 8080:80
-    links:
-      - db
+    env_file:
+      - nextcloudcreds.env
 
     volumes:
-      - /nas/Family/Phones:/var/www/html/data
-      - nc_config:/var/www/html/config # This volume will be clean
+      # 💾 Updated ZFS DATASET MAPPING
+      - /nas/Family/Test:/var/www/html/data   # Changed to /nas/Family/Test
+      - nc_config:/var/www/html/config
       - nc_apps:/var/www/html/apps
     environment:
+      # These are essential for the application setup
       - NEXTCLOUD_TRUSTED_DOMAINS=192.168.0.127:8080
       - OVERWRITEPROTOCOL=http
       - PHP_MEMORY_LIMIT=512M
       - PHP_UPLOAD_LIMIT=512M
-#      - MYSQL_HOST=db
-#      - MYSQL_DATABASE=nextcloud
-#      - MYSQL_USER=nextcloud
-      - MARIADB_HOST=db
-      - MARIADB_DATABASE=nextcloud
-      - MARIADB_USER=nextcloud
 
-
-
-
-      # Remove all env_file and explicit password variables from 'app'
-      # Nextcloud will now run the setup wizard
+      # Explicitly set DB connection host (Docker network name)
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
 
 volumes:
   db_data:
