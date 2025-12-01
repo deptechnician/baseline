@@ -1,3 +1,7 @@
+# Ignore files generated for the nextcloud nas
+nextcloudcreds.env
+Caddyfile
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
