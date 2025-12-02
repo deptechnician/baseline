@@ -1,6 +1,7 @@
 # Ignore files generated for the nextcloud nas
-nextcloudcreds.env
+.env
 Caddyfile
+docker-compose.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
