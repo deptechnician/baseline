@@ -9,8 +9,8 @@ ENV_FILE="./.env"
 
 # Check if the file already exists (prevent accidental overwrite)
 if [ -f "$ENV_FILE" ]; then
-    echo "ERROR: Environment file $ENV_FILE already exists."
-    echo "Deployment aborted to protect existing credentials."
+    echo "Environment file $ENV_FILE already exists."
+    echo "Changes skipped to protect existing credentials."
     exit 0
 fi
 

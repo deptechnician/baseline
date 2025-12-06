@@ -7,12 +7,12 @@ echo "   Nextcloud + Caddy + MariaDB Setup    "
 echo "=============================================="
 
 # --- 1. Call external provisioning script ---
-echo "Calling provision_creds.sh to create .env..."
+echo "Provisioning credentials..."
 if ! ./provision_creds.sh; then
     echo "Error: provision_creds.sh failed."
     exit 1
 fi
-echo "Credentail provisioing complete (.env file)."
+echo "Credentail provisioning complete (.env file)."
 
 # --- 2. Load environment variables ---
 source .env
