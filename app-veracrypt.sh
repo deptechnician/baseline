@@ -15,7 +15,7 @@ else
     # --- Install the pre-requisites
     # --- See compiling guide here: https://www.veracrypt.fr/en/CompilingGuidelineLinux.html
     bash install-helper.sh git git git
-    bash install-helper.sh gmake make "make utility"
+    bash install-helper.sh make make "make utility"
     bash install-helper.sh g++ g++ "g++ compiler"
     bash install-helper.sh yasm yasm "yasm"
     bash install-helper.sh pkg-config pkg-config "pkg-config"

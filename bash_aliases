@@ -20,6 +20,7 @@ alias gpt="ollama run llama3"
 alias hostchange='dep_script_hostchange'
 alias installapp='dep_script_installapp'
 alias installdocker='dep_script_installdocker'
+alias labmox="ssh -L 8080:10.10.0.3:8006 dep@jump"
 alias netscan="nmap -sn"
 alias nasup='dep_script_nasup'
 alias nasget='dep_script_nasget'
@@ -52,6 +53,7 @@ alias transcripts='dep_script_transcripts'
 alias update='dep_script_update'
 alias vmsdown='dep_script_vmsdown'
 alias wake='dep_script_wake'
+alias zfsenc="zfs list -r -o name,encryption,keystatus,encryptionroot nas"
 
 # -------------------------------------
 # Function to run a DEP script
